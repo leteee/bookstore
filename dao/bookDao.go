@@ -7,6 +7,7 @@ import (
 
 const DefaultImgPath = "/static/img/default.jpg"
 
+// GetBooks 查询所有图书
 func GetBooks() ([]*model.Book, error) {
 	sqlStr := "select id, title, author, price, sales, stock, img_path from books"
 	rows, err := utils.Db.Query(sqlStr)
@@ -23,9 +24,20 @@ func GetBooks() ([]*model.Book, error) {
 	return books, nil
 }
 
+// AddBook 添加图书
 func AddBook(b *model.Book) error {
 	sqlStr := "insert into books (title, author, price, sales, stock, img_path) value (?, ?, ?, ?, ?, ?)"
 	_, err := utils.Db.Exec(sqlStr, &b.Title, &b.Author, &b.Price, &b.Sales, &b.Stock, DefaultImgPath)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// DeleteBook 删除图书
+func DeleteBook(bookID int) error {
+	sqlStr := "delete from books where id = ?;"
+	_, err := utils.Db.Exec(sqlStr, bookID)
 	if err != nil {
 		return err
 	}

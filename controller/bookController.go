@@ -39,3 +39,11 @@ func AddBook(w http.ResponseWriter, r *http.Request) {
 	dao.AddBook(book)
 	GetBooks(w, r)
 }
+
+// DeleteBook 删除图书
+func DeleteBook(w http.ResponseWriter, r *http.Request) {
+	bookId := r.FormValue("bookId")
+	bookID, _ := strconv.ParseInt(bookId, 10, 0)
+	dao.DeleteBook(int(bookID))
+	GetBooks(w, r)
+}
