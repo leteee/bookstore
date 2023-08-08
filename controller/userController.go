@@ -18,7 +18,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		t.Execute(w, "")
 	} else {
 		t := template.Must(template.ParseFiles("views/pages/user/login.html"))
-		t.Execute(w, "用户没或密码不存在！")
+		t.Execute(w, "用户名或密码不存在！")
 	}
 }
 
@@ -33,11 +33,11 @@ func Regist(w http.ResponseWriter, r *http.Request) {
 	if user.ID > 0 {
 		//用户名被占用
 		t := template.Must(template.ParseFiles("views/pages/user/regist.html"))
-		t.Execute(w, "用户名已经存在")
+		t.Execute(w, "用户名已经存在！")
 	} else {
 		//可以使用
 		dao.SaveUser(username, password, email)
 		t := template.Must(template.ParseFiles("views/pages/user/regist_success.html"))
-		t.Execute(w, "")
+		t.Execute(w, "用户名可以使用！")
 	}
 }
