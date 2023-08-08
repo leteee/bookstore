@@ -16,6 +16,7 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("views/static/"))))
 	http.Handle("/pages/", http.StripPrefix("/pages/", http.FileServer(http.Dir("views/pages/"))))
 
+	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/index", indexHandler)
 
 	//登录
@@ -24,6 +25,8 @@ func main() {
 	http.HandleFunc("/regist", controller.Regist)
 	//校验用户名
 	http.HandleFunc("/checkUserName", controller.CheckUserName)
+	//图书列表
+	http.HandleFunc("/getBooks", controller.GetBooks)
 
 	http.ListenAndServe("", nil)
 }
