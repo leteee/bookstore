@@ -22,6 +22,8 @@ func main() {
 	http.HandleFunc("/login", controller.Login)
 	//注册
 	http.HandleFunc("/regist", controller.Regist)
+	//校验用户名
+	http.HandleFunc("/checkUserName", controller.CheckUserName)
 
 	http.ListenAndServe("", nil)
 }

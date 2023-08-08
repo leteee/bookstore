@@ -58,7 +58,6 @@
                         <input type="submit" value="注册" id="sub_btn"/>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>
@@ -72,6 +71,15 @@
     if ("{{.}}" == "用户名已经存在！") {
         $(".errorMsg").text("{{.}}")
     }
+
+    //验证用户名是否存在
+    $("#username").change(function () {
+        var username = $(this).val()
+        var params = {"username": username}
+        $.post("/checkUserName", params, function (res) {
+            $(".errorMsg").html(res)
+        })
+    })
 </script>
 </body>
 </html>
