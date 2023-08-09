@@ -19,7 +19,7 @@ func GetBooks(w http.ResponseWriter, r *http.Request) {
 // AddBook 添加图书
 func AddBook(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
-	author := r.FormValue("title")
+	author := r.FormValue("author")
 	price := r.FormValue("price")
 	sales := r.FormValue("sales")
 	stock := r.FormValue("stock")
@@ -54,4 +54,30 @@ func ToUpdateBookPage(w http.ResponseWriter, r *http.Request) {
 
 	t := template.Must(template.ParseFiles("views/pages/manager/book_modify.html"))
 	t.Execute(w, book)
+}
+
+// UpdateBook 更新图书
+func UpdateBook(w http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("bookId")
+	title := r.FormValue("title")
+	author := r.FormValue("author")
+	price := r.FormValue("price")
+	sales := r.FormValue("sales")
+	stock := r.FormValue("stock")
+
+	iId, _ := strconv.ParseInt(id, 10, 0)
+	fPrice, _ := strconv.ParseFloat(price, 64)
+	iSales, _ := strconv.ParseInt(sales, 10, 0)
+	iStock, _ := strconv.ParseInt(stock, 10, 0)
+
+	book := &model.Book{
+		ID:     int(iId),
+		Title:  title,
+		Author: author,
+		Price:  fPrice,
+		Sales:  int(iSales),
+		Stock:  int(iStock),
+	}
+	dao.UpdateBook(book)
+	GetBooks(w, r)
 }

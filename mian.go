@@ -33,6 +33,8 @@ func main() {
 	http.HandleFunc("/deleteBook", controller.DeleteBook)
 	//到编辑页面
 	http.HandleFunc("/toUpdateBookPage", controller.ToUpdateBookPage)
+	//更新图书
+	http.HandleFunc("/updateBook", controller.UpdateBook)
 
 	http.ListenAndServe("", nil)
 }

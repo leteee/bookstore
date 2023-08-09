@@ -5,16 +5,20 @@ import (
 	"testing"
 )
 
-func TestLogin(t *testing.T) {
+func Testuser(t *testing.T) {
+	fmt.Println("开始测试用户")
+}
+
+func testLogin(t *testing.T) {
 	user, _ := CheckUserNameAndPassword("admin", "123456")
 	fmt.Println("获取用户信息是：", user)
 }
 
-func TestRegist(t *testing.T) {
+func testRegist(t *testing.T) {
 	user, _ := CheckUserName("admin")
 	fmt.Println("获取用户信息是：", user)
 }
 
-func TestSaveUser(t *testing.T) {
-	//SaveUser("admin", "123456", "admin@qq.com")
+func testSaveUser(t *testing.T) {
+	SaveUser("admin", "123456", "admin@qq.com")
 }

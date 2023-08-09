@@ -8,8 +8,7 @@ import (
 
 func TestBook(t *testing.T) {
 	fmt.Println("开始测试图书模块")
-	t.Run("测试删除", deleteBook)
-	t.Run("查询一个", getBookByID)
+	t.Run("更新图书", testUpdateBook)
 }
 
 func testGetBooks(t *testing.T) {
@@ -31,11 +30,23 @@ func testAddBooks(t *testing.T) {
 	AddBook(book)
 }
 
-func deleteBook(t *testing.T) {
+func testDeleteBook(t *testing.T) {
 	DeleteBook("32")
 }
 
-func getBookByID(t *testing.T) {
+func testGetBookByID(t *testing.T) {
 	book, _ := GetBookByID("12")
 	fmt.Println("根据ID查询到的图书：", book)
+}
+
+func testUpdateBook(t *testing.T) {
+	book := &model.Book{
+		ID:     31,
+		Title:  "三个女人和105个男人的故事",
+		Author: "罗贯中",
+		Price:  88.88,
+		Sales:  10000,
+		Stock:  10,
+	}
+	UpdateBook(book)
 }
