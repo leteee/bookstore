@@ -42,8 +42,16 @@ func AddBook(w http.ResponseWriter, r *http.Request) {
 
 // DeleteBook 删除图书
 func DeleteBook(w http.ResponseWriter, r *http.Request) {
-	bookId := r.FormValue("bookId")
-	bookID, _ := strconv.ParseInt(bookId, 10, 0)
-	dao.DeleteBook(int(bookID))
+	bookID := r.FormValue("bookId")
+	dao.DeleteBook(bookID)
 	GetBooks(w, r)
+}
+
+// ToUpdateBookPage 修改图书
+func ToUpdateBookPage(w http.ResponseWriter, r *http.Request) {
+	bookID := r.FormValue("bookId")
+	book, _ := dao.GetBookByID(bookID)
+
+	t := template.Must(template.ParseFiles("views/pages/manager/book_modify.html"))
+	t.Execute(w, book)
 }

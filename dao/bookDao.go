@@ -35,11 +35,20 @@ func AddBook(b *model.Book) error {
 }
 
 // DeleteBook 删除图书
-func DeleteBook(bookID int) error {
+func DeleteBook(bookID string) error {
 	sqlStr := "delete from books where id = ?;"
 	_, err := utils.Db.Exec(sqlStr, bookID)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+// GetBookByID 根据主键获取图书
+func GetBookByID(bookID string) (*model.Book, error) {
+	sqlStr := "select id, title, author, price, sales, stock, img_path from books where id = ?"
+	row := utils.Db.QueryRow(sqlStr, bookID)
+	book := &model.Book{}
+	row.Scan(&book.ID, &book.Title, &book.Author, &book.Price, &book.Sales, &book.Stock, &book.ImgPath)
+	return book, nil
 }

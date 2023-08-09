@@ -9,6 +9,7 @@ import (
 func TestBook(t *testing.T) {
 	fmt.Println("开始测试图书模块")
 	t.Run("测试删除", deleteBook)
+	t.Run("查询一个", getBookByID)
 }
 
 func testGetBooks(t *testing.T) {
@@ -31,5 +32,10 @@ func testAddBooks(t *testing.T) {
 }
 
 func deleteBook(t *testing.T) {
-	DeleteBook(32)
+	DeleteBook("32")
+}
+
+func getBookByID(t *testing.T) {
+	book, _ := GetBookByID("12")
+	fmt.Println("根据ID查询到的图书：", book)
 }
