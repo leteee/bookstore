@@ -8,7 +8,8 @@ import (
 
 func TestBook(t *testing.T) {
 	fmt.Println("开始测试图书模块")
-	t.Run("更新图书", testUpdateBook)
+	//t.Run("更新图书", testUpdateBook)
+	t.Run("分页查询图书：", testGetPageBooks)
 }
 
 func testGetBooks(t *testing.T) {
@@ -49,4 +50,19 @@ func testUpdateBook(t *testing.T) {
 		Stock:  10,
 	}
 	UpdateBook(book)
+}
+
+func testGetPageBooks(t *testing.T) {
+	page := &model.Page{
+		PageNo:   2,
+		PageSize: 5,
+	}
+	page, _ = GetPageBooks(page)
+	fmt.Println("当前页面：", page.PageNo)
+	fmt.Println("页大小：", page.PageSize)
+	fmt.Println("总页数：", page.TotalPageNo)
+	fmt.Println("总记录数：", page.TotalRecord)
+	for k, v := range page.Books {
+		fmt.Printf("第%v本书，%v\n", k, v)
+	}
 }

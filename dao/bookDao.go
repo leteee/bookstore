@@ -7,10 +7,20 @@ import (
 
 const DefaultImgPath = "/static/img/default.jpg"
 
-// GetBooks 查询所有图书
-func GetBooks() ([]*model.Book, error) {
-	sqlStr := "select id, title, author, price, sales, stock, img_path from books"
-	rows, err := utils.Db.Query(sqlStr)
+// GetPageBooks 分页查询所有图书
+func GetPageBooks(page *model.Page) (*model.Page, error) {
+	sqlStr := "select count(1) from books"
+	row := utils.Db.QueryRow(sqlStr)
+	row.Scan(&page.TotalRecord)
+
+	if page.TotalRecord%page.PageSize == 0 {
+		page.TotalPageNo = page.TotalRecord / page.PageSize
+	} else {
+		page.TotalPageNo = page.TotalRecord/page.PageSize + 1
+	}
+
+	sqlStr2 := "select id, title, author, price, sales, stock, img_path from books limit ?,?"
+	rows, err := utils.Db.Query(sqlStr2, (page.PageNo-1)*page.PageSize, page.PageSize)
 	if err != nil {
 		return nil, err
 	}
@@ -21,7 +31,8 @@ func GetBooks() ([]*model.Book, error) {
 		rows.Scan(&book.ID, &book.Title, &book.Author, &book.Price, &book.Sales, &book.Stock, &book.ImgPath)
 		books = append(books, book)
 	}
-	return books, nil
+	page.Books = books
+	return page, nil
 }
 
 // AddBook 添加图书
@@ -61,4 +72,21 @@ func UpdateBook(b *model.Book) error {
 		return err
 	}
 	return nil
+}
+
+// GetBooks 查询所有图书
+func GetBooks() ([]*model.Book, error) {
+	sqlStr := "select id, title, author, price, sales, stock, img_path from books"
+	rows, err := utils.Db.Query(sqlStr)
+	if err != nil {
+		return nil, err
+	}
+	var books []*model.Book
+
+	for rows.Next() {
+		book := &model.Book{}
+		rows.Scan(&book.ID, &book.Title, &book.Author, &book.Price, &book.Sales, &book.Stock, &book.ImgPath)
+		books = append(books, book)
+	}
+	return books, nil
 }

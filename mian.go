@@ -26,15 +26,14 @@ func main() {
 	//校验用户名
 	http.HandleFunc("/checkUserName", controller.CheckUserName)
 	//图书列表
-	http.HandleFunc("/getBooks", controller.GetBooks)
-	//添加图书
-	http.HandleFunc("/addBook", controller.AddBook)
+	//http.HandleFunc("/getBooks", controller.GetBooks)
+	http.HandleFunc("/getPageBooks", controller.GetPageBooks)
 	//删除图书
 	http.HandleFunc("/deleteBook", controller.DeleteBook)
 	//到编辑页面
 	http.HandleFunc("/toUpdateBookPage", controller.ToUpdateBookPage)
 	//更新图书
-	http.HandleFunc("/updateBook", controller.UpdateBook)
+	http.HandleFunc("/addOrUpdateBook", controller.AddOrUpdateBook)
 
 	http.ListenAndServe("", nil)
 }
