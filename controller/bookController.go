@@ -8,6 +8,21 @@ import (
 	"text/template"
 )
 
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
+	pageNo := r.FormValue("pageNo")
+	if pageNo == "" {
+		pageNo = "1"
+	}
+	iPageNo, _ := strconv.ParseInt(pageNo, 10, 64)
+	page := &model.Page{
+		PageNo:   iPageNo,
+		PageSize: 4,
+	}
+	page, _ = dao.GetPageBooks(page)
+	t := template.Must(template.ParseFiles("views/index.html"))
+	t.Execute(w, page)
+}
+
 // GetBooks 获取图书
 func GetBooks(w http.ResponseWriter, r *http.Request) {
 	books, _ := dao.GetBooks()
