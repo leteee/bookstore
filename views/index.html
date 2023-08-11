@@ -22,9 +22,17 @@
 <div id="main">
     <div id="book">
         <div class="book_cond">
-            价格：<input type="text" name="min"> 元 - <input type="text" name="max"> 元
-            <button>查询</button>
+            <form action="/index?pageNo={{.PageNo}}" method="POST">
+                {{if .IsByPrice}}
+                价格：<input type="text" name="min" value="{{.MinPrice}}"> 元 -
+                <input type="text" name="max" value="{{.MaxPrice}}"> 元
+                {{else}}
+                价格：<input type="text" name="min"> 元 - <input type="text" name="max"> 元
+                {{end}}
+                <button>查询</button>
+            </form>
         </div>
+
         <div style="text-align: center">
             <span>您的购物车中有3件商品</span>
             <div>
@@ -65,23 +73,36 @@
         {{end}}
     </div>
 
-
     <div id="page_nav">
         {{if .IsHasPrev}}
+        {{if .IsByPrice}}
+        <a href="/index?min={{.MinPrice}}&max={{.MaxPrice}}">首页</a>
+        <a href="/index?pageNo={{.GetPrev}}&min={{.MinPrice}}&max={{.MaxPrice}}">上一页</a>
+        {{else}}
         <a href="/index">首页</a>
         <a href="/index?pageNo={{.GetPrev}}">上一页</a>
         {{end}}
+        {{end}}
         当前是第{{.PageNo}}页，共{{.TotalPageNo}}页，共{{.TotalRecord}}条记录
         {{if .IsHasNext}}
+        {{if .IsByPrice}}
+        <a href="/index?pageNo={{.GetNext}}&min={{.MinPrice}}&max={{.MaxPrice}}">下一页</a>
+        <a href="/index?pageNo={{.TotalPageNo}}&min={{.MinPrice}}&max={{.MaxPrice}}">末页</a>
+        {{else}}
         <a href="/index?pageNo={{.GetNext}}">下一页</a>
         <a href="/index?pageNo={{.TotalPageNo}}">末页</a>
+        {{end}}
         {{end}}
         到第<input value="{{.PageNo}}" name="pn" id="pn_input"/>页
         <input type="button" value="确定" id="sub">
         <script type="text/javascript">
             $("#sub").click(function () {
                 var pageNo = $("#pn_input").val();
-                location = "/index?pageNo=" + pageNo;
+                if({{.IsByPrice}}){
+                    location = "/index?pageNo=" + pageNo + "min={{.MinPrice}}&max={{.MaxPrice}}";
+                }else{
+                    location = "/index?pageNo=" + pageNo;
+                }
             })
         </script>
     </div>

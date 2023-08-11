@@ -35,6 +35,36 @@ func GetPageBooks(page *model.Page) (*model.Page, error) {
 	return page, nil
 }
 
+// GetPageBooks 分页查询所有图书
+func GetPageBooksByPrice(page *model.Page, minPrice float64, macPrice float64) (*model.Page, error) {
+	sqlStr := "select count(1) from books where price between ? and ?"
+	row := utils.Db.QueryRow(sqlStr, minPrice, macPrice)
+	row.Scan(&page.TotalRecord)
+
+	if page.TotalRecord%page.PageSize == 0 {
+		page.TotalPageNo = page.TotalRecord / page.PageSize
+	} else {
+		page.TotalPageNo = page.TotalRecord/page.PageSize + 1
+	}
+
+	sqlStr2 := "select id, title, author, price, sales, stock, img_path from books where price between ? and ? limit ?,?"
+	rows, err := utils.Db.Query(sqlStr2, minPrice, macPrice, (page.PageNo-1)*page.PageSize, page.PageSize)
+	if err != nil {
+		return nil, err
+	}
+	var books []*model.Book
+
+	for rows.Next() {
+		book := &model.Book{}
+		rows.Scan(&book.ID, &book.Title, &book.Author, &book.Price, &book.Sales, &book.Stock, &book.ImgPath)
+		books = append(books, book)
+	}
+	page.Books = books
+	page.MinPrice = minPrice
+	page.MaxPrice = macPrice
+	return page, nil
+}
+
 // AddBook 添加图书
 func AddBook(b *model.Book) error {
 	sqlStr := "insert into books (title, author, price, sales, stock, img_path) value (?, ?, ?, ?, ?, ?)"

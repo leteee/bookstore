@@ -6,6 +6,8 @@ type Page struct {
 	PageSize    int64
 	TotalPageNo int64
 	TotalRecord int64
+	MinPrice    float64
+	MaxPrice    float64
 }
 
 // IsHasPrev 判断是否有上一页
@@ -33,5 +35,14 @@ func (p *Page) GetNext() int64 {
 		return p.PageNo + 1
 	} else {
 		return p.TotalPageNo
+	}
+}
+
+// IsByPrice 是否依据价格查询
+func (p *Page) IsByPrice() bool {
+	if p.MaxPrice == 0 && p.MinPrice == 0 {
+		return false
+	} else {
+		return true
 	}
 }

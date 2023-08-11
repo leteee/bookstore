@@ -18,7 +18,18 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		PageNo:   iPageNo,
 		PageSize: 4,
 	}
-	page, _ = dao.GetPageBooks(page)
+
+	minPrice := r.FormValue("min")
+	maxPrice := r.FormValue("max")
+	if (minPrice != "") && (maxPrice != "") {
+		fMinPrice, _ := strconv.ParseFloat(minPrice, 64)
+		fMaxPrice, _ := strconv.ParseFloat(maxPrice, 64)
+		page, _ = dao.GetPageBooksByPrice(page, fMinPrice, fMaxPrice)
+		page.MinPrice = fMinPrice
+		page.MaxPrice = fMaxPrice
+	} else {
+		page, _ = dao.GetPageBooks(page)
+	}
 	t := template.Must(template.ParseFiles("views/index.html"))
 	t.Execute(w, page)
 }
