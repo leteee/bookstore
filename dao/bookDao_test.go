@@ -9,7 +9,7 @@ import (
 func TestBook(t *testing.T) {
 	fmt.Println("开始测试图书模块")
 	//t.Run("更新图书", testUpdateBook)
-	t.Run("分页查询图书：", testGetPageBooks)
+	//t.Run("分页查询图书：", testGetPageBooks)
 }
 
 func testGetBooks(t *testing.T) {

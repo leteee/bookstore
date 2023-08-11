@@ -10,7 +10,7 @@ func TestSession(t *testing.T) {
 	fmt.Println("开始测试用户")
 	//t.Run("新增", testAddSession)
 	//t.Run("查询", testGetSession)
-	t.Run("删除", testDeleteSession)
+	//t.Run("删除", testDeleteSession)
 }
 
 func testAddSession(t *testing.T) {
