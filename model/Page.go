@@ -8,6 +8,8 @@ type Page struct {
 	TotalRecord int64
 	MinPrice    float64
 	MaxPrice    float64
+	IsLogin     bool
+	Username    string
 }
 
 // IsHasPrev 判断是否有上一页

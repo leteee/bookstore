@@ -2,18 +2,49 @@ package controller
 
 import (
 	"bookstore/dao"
+	"bookstore/model"
+	"github.com/google/uuid"
 	"net/http"
 	"text/template"
 )
 
+// Logout 注销
+func Logout(w http.ResponseWriter, r *http.Request) {
+	// 获取Cookie
+	cookie, _ := r.Cookie("user")
+	if cookie != nil {
+		cookieValue := cookie.Value
+		dao.DeleteSession(cookieValue)
+	}
+	cookie.MaxAge = -1
+	http.SetCookie(w, cookie)
+	IndexHandler(w, r)
+}
+
 // Login 登录
 func Login(w http.ResponseWriter, r *http.Request) {
+	flag, _ := dao.IsLogin(r)
+	if flag {
+		IndexHandler(w, r)
+	}
+
 	username := r.FormValue("username")
 	password := r.FormValue("password")
-
 	user, _ := dao.CheckUserNameAndPassword(username, password)
-
 	if user.ID > 0 {
+		sessionID := uuid.NewString()
+		session := &model.Session{
+			SessionID: sessionID,
+			Username:  user.Username,
+			UserID:    user.ID,
+		}
+		dao.AddSession(session)
+		cookie := &http.Cookie{
+			Name:     "user",
+			Value:    sessionID,
+			HttpOnly: true,
+		}
+		http.SetCookie(w, cookie)
 		t := template.Must(template.ParseFiles("views/pages/user/login_success.html"))
 		t.Execute(w, user)
 	} else {

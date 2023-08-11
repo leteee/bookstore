@@ -15,6 +15,8 @@ func main() {
 
 	//登录
 	http.HandleFunc("/login", controller.Login)
+	//注销
+	http.HandleFunc("/logout", controller.Logout)
 	//注册
 	http.HandleFunc("/regist", controller.Regist)
 	//校验用户名

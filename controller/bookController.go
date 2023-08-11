@@ -30,6 +30,12 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		page, _ = dao.GetPageBooks(page)
 	}
+	// 获取Cookie
+	flag, session := dao.IsLogin(r)
+	if flag {
+		page.IsLogin = true
+		page.Username = session.Username
+	}
 	t := template.Must(template.ParseFiles("views/index.html"))
 	t.Execute(w, page)
 }
