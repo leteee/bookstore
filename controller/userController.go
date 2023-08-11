@@ -15,7 +15,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	if user.ID > 0 {
 		t := template.Must(template.ParseFiles("views/pages/user/login_success.html"))
-		t.Execute(w, "")
+		t.Execute(w, user)
 	} else {
 		t := template.Must(template.ParseFiles("views/pages/user/login.html"))
 		t.Execute(w, "用户名或密码不存在！")

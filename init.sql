@@ -88,3 +88,13 @@ INSERT INTO books (title, author, price, sales, stock, img_path)
 VALUES ('艾伦图灵传', '安德鲁', 47.20, 100, 100, 'static/img/default.jpg');
 INSERT INTO books (title, author, price, sales, stock, img_path)
 VALUES ('教父', '马里奥普佐', 29.00, 100, 100, 'static/img/default.jpg');
+
+# session表
+drop table if exists sessions;
+create table sessions
+(
+    session_id varchar(100) primary key,
+    username   varchar(100) not null,
+    user_id    int          not null,
+    FOREIGN KEY (user_id) references users (id)
+)
