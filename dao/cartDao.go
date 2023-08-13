@@ -31,3 +31,13 @@ func GetCartByUserID(userID int) (*model.Cart, error) {
 	cart.CartItems = cartItems
 	return cart, nil
 }
+
+// UpdateCart 更细购物车
+func UpdateCart(cart *model.Cart) error {
+	sqlStr := "update carts set total_count = ?,total_amount = ? where id = ?"
+	_, err := utils.Db.Exec(sqlStr, cart.GetTotalCount(), cart.GetTotalAmount(), cart.CartID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

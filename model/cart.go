@@ -8,7 +8,7 @@ type Cart struct {
 	UserID      int
 }
 
-// GetTotalCount 计算总金额
+// GetTotalCount 计算总数量
 func (c *Cart) GetTotalCount() int64 {
 	var totalCount int64
 	for _, v := range c.CartItems {
@@ -17,7 +17,7 @@ func (c *Cart) GetTotalCount() int64 {
 	return totalCount
 }
 
-// GetTotalCount 计算总金额
+// GetTotalAmount 计算总金额
 func (c *Cart) GetTotalAmount() float64 {
 	var totalAmount float64
 	for _, v := range c.CartItems {

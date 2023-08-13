@@ -16,33 +16,50 @@ func AddCartItem(c *model.CartItem) error {
 }
 
 // GetCartItemByBookID 根据图书的id获取对应的购物项目
-func GetCartItemByBookID(bookId int) (*model.CartItem, error) {
-	sqlStr := "select id, count, amount, cart_id from cart_items where book_id = ?"
-	row := utils.Db.QueryRow(sqlStr, bookId)
+func GetCartItemByBookID(bookID string) (*model.CartItem, error) {
+	sqlStr := "select id, count, amount, book_id, cart_id from cart_items where book_id = ?"
+	row := utils.Db.QueryRow(sqlStr, bookID)
 	cartItem := &model.CartItem{}
-	err := row.Scan(&cartItem.CartItemID, &cartItem.Count, &cartItem.Amount, &cartItem.CartID)
+	var bookId string
+	err := row.Scan(&cartItem.CartItemID, &cartItem.Count, &cartItem.Amount, &bookId, &cartItem.CartID)
 	if err != nil {
 		return nil, err
 	}
+	cartItem.Book, _ = GetBookByID(bookId)
 	return cartItem, nil
 }
 
 // GetCartItemsByCartID 根据购物车的id获取购物车中所有的购物项
-func GetCartItemsByCartID(cartId string) ([]*model.CartItem, error) {
-	sqlStr := "select id, count, amount, cart_id from cart_items where cart_id = ?"
-	rows, err := utils.Db.Query(sqlStr, cartId)
+func GetCartItemsByCartID(cartID string) ([]*model.CartItem, error) {
+	sqlStr := "select id, count, amount, book_id, cart_id from cart_items where cart_id = ?"
+	rows, err := utils.Db.Query(sqlStr, cartID)
 	if err != nil {
 		return nil, err
 	}
-
 	var cartItems []*model.CartItem
 	for rows.Next() {
+		var bookId string
 		cartItem := &model.CartItem{}
-		err := rows.Scan(&cartItem.CartItemID, &cartItem.Count, &cartItem.Amount, &cartItem.CartID)
+		err := rows.Scan(&cartItem.CartItemID, &cartItem.Count, &cartItem.Amount, &bookId, &cartItem.CartID)
 		if err != nil {
 			return nil, err
 		}
+		cartItem.Book, _ = GetBookByID(bookId)
 		cartItems = append(cartItems, cartItem)
 	}
 	return cartItems, nil
+}
+
+// GetCartItemsByCartIDAndBookID 根据购物车主键和书籍主键获取购物车中所有的购物项
+func GetCartItemsByCartIDAndBookID(cartID, bookID string) (*model.CartItem, error) {
+	sqlStr := "select id, count, amount, book_id, cart_id from cart_items where cart_id = ? and book_id = ?"
+	rows := utils.Db.QueryRow(sqlStr, cartID, bookID)
+	cartItem := &model.CartItem{}
+	var bookId string
+	err := rows.Scan(&cartItem.CartItemID, &cartItem.Count, &cartItem.Amount, &bookId, &cartItem.CartID)
+	if err != nil {
+		return nil, err
+	}
+	cartItem.Book, _ = GetBookByID(bookId)
+	return cartItem, nil
 }

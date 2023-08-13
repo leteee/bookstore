@@ -5,6 +5,18 @@
     <title>书城首页</title>
     <link type="text/css" rel="stylesheet" href="/static/css/style.css">
     <script type="text/javascript" src="/static/script/jquery-1.7.2.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $(".addBookToCart").click(function () {
+                var bookId = $(this).attr("id")
+                var url = "/addBookToCart"
+                var param = {"bookId": bookId}
+                $.post(url, param, function () {
+                    //todo
+                })
+            })
+        })
+    </script>
 </head>
 <body>
 
@@ -75,7 +87,7 @@
                     <span class="sp2">{{.Stock}}</span>
                 </div>
                 <div class="book_add">
-                    <button>加入购物车</button>
+                    <button id="{{.ID}}" class="addBookToCart">加入购物车</button>
                 </div>
             </div>
         </div>
