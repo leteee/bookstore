@@ -11,8 +11,8 @@
                 var bookId = $(this).attr("id")
                 var url = "/addBookToCart"
                 var param = {"bookId": bookId}
-                $.post(url, param, function () {
-                    //todo
+                $.post(url, param, function (res) {
+                    $("#err_msg").html(res)
                 })
             })
         })
@@ -57,7 +57,7 @@
         <div style="text-align: center">
             <span>您的购物车中有3件商品</span>
             <div>
-                您刚刚将<span style="color: red">时间简史</span>加入到了购物车中
+                <span id="err_msg"></span>
             </div>
         </div>
         {{range .Books}}

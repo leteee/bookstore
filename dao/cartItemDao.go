@@ -63,3 +63,13 @@ func GetCartItemsByCartIDAndBookID(cartID, bookID string) (*model.CartItem, erro
 	cartItem.Book, _ = GetBookByID(bookId)
 	return cartItem, nil
 }
+
+// UpdateBookCountAndAmount 更新书的数量
+func UpdateBookCountAndAmount(cartItem *model.CartItem) error {
+	sqlStr := "update cart_items set count = ? ,amount = ? where id = ?"
+	_, err := utils.Db.Exec(sqlStr, cartItem.Count, cartItem.GetAmount(), cartItem.CartItemID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
