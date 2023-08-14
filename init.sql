@@ -121,3 +121,30 @@ create table cart_items
     foreign key (book_id) references books (id),
     foreign key (cart_id) references carts (id)
 );
+
+# 订单表
+drop table if exists orders;
+create table orders
+(
+    id           varchar(100) primary key,
+    create_time  DATETIME      not null,
+    total_count  int           not null,
+    total_amount double(11, 2) not null,
+    state        int           not null,
+    user_id      int
+);
+
+# 订单项
+drop table if exists order_items;
+create table order_items
+(
+    id       int primary key AUTO_INCREMENT,
+    order_id varchar(100)  not null,
+    count    int           not null,
+    amount   double(11, 2) not null,
+    title    varchar(100)  not null,
+    author   varchar(100)  not null,
+    price    double(11, 2),
+    img_path varchar(100)  null,
+    foreign key (order_id) references orders (id)
+)
