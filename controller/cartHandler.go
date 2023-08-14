@@ -4,6 +4,7 @@ import (
 	"bookstore/dao"
 	"bookstore/model"
 	"github.com/google/uuid"
+	"html/template"
 	"net/http"
 )
 
@@ -61,5 +62,24 @@ func AddBookToCart(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("您刚刚将<span style='color: red'>" + book.Title + "</span>加入到了购物车中"))
 	} else {
 		w.Write([]byte("<span style='color: red'>请先登录！</span>"))
+	}
+}
+
+// GetCartInfo 获取购物车信息
+func GetCartInfo(w http.ResponseWriter, r *http.Request) {
+	flag, session := dao.IsLogin(r)
+	if flag {
+		cart, err := dao.GetCartByUserID(session.UserID)
+		if err == nil {
+			session.Cart = cart
+			t := template.Must(template.ParseFiles("views/pages/cart/cart.html"))
+			t.Execute(w, session)
+		} else {
+			t := template.Must(template.ParseFiles("views/pages/cart/cart.html"))
+			t.Execute(w, session)
+		}
+	} else {
+		t := template.Must(template.ParseFiles("views/pages/user/login.html"))
+		t.Execute(w, "")
 	}
 }

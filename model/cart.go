@@ -6,6 +6,7 @@ type Cart struct {
 	TotalCount  int64
 	TotalAmount float64
 	UserID      int
+	Username    string
 }
 
 // GetTotalCount 计算总数量
