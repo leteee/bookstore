@@ -127,7 +127,7 @@ drop table if exists orders;
 create table orders
 (
     id           varchar(100) primary key,
-    create_time  DATETIME      not null,
+    create_time  varchar(100)  not null,
     total_count  int           not null,
     total_amount double(11, 2) not null,
     state        int           not null,

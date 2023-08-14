@@ -5,4 +5,5 @@ type Session struct {
 	Username  string
 	UserID    int
 	Cart      *Cart
+	Order     *Order
 }
