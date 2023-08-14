@@ -34,6 +34,8 @@ func main() {
 	http.HandleFunc("/addBookToCart", controller.AddBookToCart)
 	//查看购物车信息
 	http.HandleFunc("/getCartInfo", controller.GetCartInfo)
+	//清空购物车
+	http.HandleFunc("/emptyCart", controller.EmptyCart)
 
 	http.ListenAndServe("", nil)
 }

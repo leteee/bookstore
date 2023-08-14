@@ -83,3 +83,18 @@ func GetCartInfo(w http.ResponseWriter, r *http.Request) {
 		t.Execute(w, "")
 	}
 }
+
+// EmptyCart 清空购物车
+func EmptyCart(w http.ResponseWriter, r *http.Request) {
+	flag, session := dao.IsLogin(r)
+	if flag {
+		cart, err := dao.GetCartByUserID(session.UserID)
+		if err == nil {
+			dao.DeleteCartByID(cart.CartID)
+		}
+		GetCartInfo(w, r)
+	} else {
+		t := template.Must(template.ParseFiles("views/pages/user/login.html"))
+		t.Execute(w, "")
+	}
+}

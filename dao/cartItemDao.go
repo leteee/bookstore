@@ -73,3 +73,13 @@ func UpdateBookCountAndAmount(cartItem *model.CartItem) error {
 	}
 	return nil
 }
+
+// DeleteCartItemsByCartID 根据购物车主键删除购物项
+func DeleteCartItemsByCartID(cartID string) error {
+	sqlStr := "delete from cart_items where cart_id = ?"
+	_, err := utils.Db.Exec(sqlStr, cartID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
