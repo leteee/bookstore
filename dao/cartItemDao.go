@@ -83,3 +83,23 @@ func DeleteCartItemsByCartID(cartID string) error {
 	}
 	return nil
 }
+
+// DeleteCartItemByID 删除购物项目
+func DeleteCartItemByID(cartID int64) error {
+	sqlStr := "delete from cart_items where id = ?"
+	_, err := utils.Db.Exec(sqlStr, cartID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// UpdateBookCount  更新购物项数目
+func UpdateBookCount(cartItem *model.CartItem) error {
+	sqlStr := "update cart_items set count = ? where id = ?"
+	_, err := utils.Db.Exec(sqlStr, cartItem.Count, cartItem.CartItemID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

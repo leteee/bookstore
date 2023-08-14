@@ -8,7 +8,16 @@
     <script type="text/javascript">
         $(function () {
             $("#emptyCart").click(function () {
-                return confirm("确定清空购物车吗！！！")
+                return confirm("亲！确定要清空购物车吗？🥹")
+            })
+            $("#deleteCartItem").click(function () {
+                const bookTitle = $(this).attr('id');
+                return confirm("确定要删除" + bookTitle + "这本图书吗？")
+            })
+            $(".updateCartItem").change(function () {
+                const cartItemId = $(this).attr('id')
+                const bookCount = $(this).val()
+                location = "/updateCartItem?cartItemId=" + cartItemId + "&bookCount=" + bookCount;
             })
         })
     </script>
@@ -48,10 +57,14 @@
         {{range .Cart.CartItems}}
         <tr>
             <td>{{.Book.Title}}</td>
-            <td>{{.Count}}</td>
+            <td>
+                <input id="{{.CartItemID}}" class="updateCartItem" value="{{.Count}}"
+                       style="text-align: center;width: 50px">
+            </td>
             <td>{{.Book.Price}}</td>
             <td>{{.Amount}}</td>
-            <td><a href="#">删除</a></td>
+            <td><a class="deleteCartItem" id="{{.Book.Title}}" href="deleteCartItem?cartItemId={{.CartItemID}}">删除</a>
+            </td>
         </tr>
         {{end}}
     </table>
@@ -59,7 +72,7 @@
         <span class="cart_span">购物车中共有<span class="b_count">{{.Cart.TotalCount}}</span>件商品</span>
         <span class="cart_span">总金额<span class="b_price">{{.Cart.TotalAmount}}</span>元</span>
         <span class="cart_span"><a href="/">继续购物</a></span>
-        <span class="cart_span"><a href="/emptyCart" id ="emptyCart">清空购物车</a></span>
+        <span class="cart_span"><a href="/emptyCart" id="emptyCart">清空购物车</a></span>
         <span class="cart_span"><a href="/pages/cart/checkout.html">去结账</a></span>
     </div>
     {{else}}

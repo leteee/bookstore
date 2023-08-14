@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"html/template"
 	"net/http"
+	"strconv"
 )
 
 // AddBookToCart 将图书加入到购物车
@@ -70,7 +71,7 @@ func GetCartInfo(w http.ResponseWriter, r *http.Request) {
 	flag, session := dao.IsLogin(r)
 	if flag {
 		cart, err := dao.GetCartByUserID(session.UserID)
-		if err == nil {
+		if err == nil && len(cart.CartItems) > 0 {
 			session.Cart = cart
 			t := template.Must(template.ParseFiles("views/pages/cart/cart.html"))
 			t.Execute(w, session)
@@ -91,6 +92,65 @@ func EmptyCart(w http.ResponseWriter, r *http.Request) {
 		cart, err := dao.GetCartByUserID(session.UserID)
 		if err == nil {
 			dao.DeleteCartByID(cart.CartID)
+		}
+		GetCartInfo(w, r)
+	} else {
+		t := template.Must(template.ParseFiles("views/pages/user/login.html"))
+		t.Execute(w, "")
+	}
+}
+
+// DeleteCartItem 删除购物项
+func DeleteCartItem(w http.ResponseWriter, r *http.Request) {
+	flag, session := dao.IsLogin(r)
+	if flag {
+		cart, err := dao.GetCartByUserID(session.UserID)
+		if err == nil {
+			cartItemId := r.FormValue("cartItemId")
+			iCartItemID, _ := strconv.ParseInt(cartItemId, 10, 64)
+			cartItems := cart.CartItems
+			cartItemLen := len(cartItems)
+			for k, v := range cartItems {
+				if v.CartItemID == iCartItemID {
+					dao.DeleteCartItemByID(iCartItemID)
+					if k == 0 {
+						cartItems = cartItems[1:]
+					} else if k == cartItemLen-1 {
+						cartItems = cartItems[:cartItemLen-1]
+					} else {
+						cartItems = append(cartItems[0:k], cartItems[k+1:0]...)
+					}
+					cart.CartItems = cartItems
+					break
+				}
+			}
+			dao.UpdateCart(cart)
+		}
+		GetCartInfo(w, r)
+	} else {
+		t := template.Must(template.ParseFiles("views/pages/user/login.html"))
+		t.Execute(w, "")
+	}
+}
+
+// UpdateCartItem 更新购物项数目
+func UpdateCartItem(w http.ResponseWriter, r *http.Request) {
+	flag, session := dao.IsLogin(r)
+	if flag {
+		cart, err := dao.GetCartByUserID(session.UserID)
+		if err == nil {
+			cartItemId := r.FormValue("cartItemId")
+			iCartItemID, _ := strconv.ParseInt(cartItemId, 10, 64)
+			bookCount := r.FormValue("bookCount")
+			iBookCount, _ := strconv.ParseInt(bookCount, 10, 64)
+			cartItems := cart.CartItems
+			for _, v := range cartItems {
+				if v.CartItemID == iCartItemID {
+					v.Count = iBookCount
+					dao.UpdateBookCount(v)
+				}
+			}
+			dao.UpdateCart(cart)
 		}
 		GetCartInfo(w, r)
 	} else {
