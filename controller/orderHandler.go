@@ -30,9 +30,12 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 			for _, v := range cartItems {
 				orderItem := &model.OrderItem{
 					OrderID: orderID,
-					Book:    v.Book,
 					Count:   v.Count,
 					Amount:  v.Amount,
+					Title:   v.Book.Title,
+					Author:  v.Book.Author,
+					Price:   v.Book.Price,
+					ImgPath: v.Book.ImgPath,
 				}
 				dao.AddOrderItem(orderItem)
 				book := v.Book
@@ -52,4 +55,19 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 		t := template.Must(template.ParseFiles("views/pages/user/login.html"))
 		t.Execute(w, "")
 	}
+}
+
+// GetOrders 查询所有订单
+func GetOrders(w http.ResponseWriter, r *http.Request) {
+	orders, _ := dao.GetOrders()
+	t := template.Must(template.ParseFiles("views/pages/order/order_manager.html"))
+	t.Execute(w, orders)
+}
+
+// GetOrderInfo 获取订单对应的订单项目
+func GetOrderInfo(w http.ResponseWriter, r *http.Request) {
+	orderID := r.FormValue("orderId")
+	orderItems, _ := dao.GetOrderItemsByOrderID(orderID)
+	t := template.Must(template.ParseFiles("views/pages/order/order_info.html"))
+	t.Execute(w, orderItems)
 }

@@ -5,5 +5,8 @@ type OrderItem struct {
 	OrderID     string
 	Count       int64
 	Amount      float64
-	*Book
+	Title       string
+	Author      string
+	Price       float64
+	ImgPath     string
 }

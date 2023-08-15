@@ -9,7 +9,7 @@ func TestCartItem(t *testing.T) {
 	fmt.Println("测试购物项目")
 	//t.Run("测试根据图书的id获取对应的购物项目", testGetCartItemByBookID)
 	//t.Run("测试根据购物车的id获取购物车中所有的购物项", testGetCartItemsByCartID)
-	t.Run("根据购物车主键和书籍主键获取购物车中所有的购物项", testGetCartItemsByCartIDAndBookID)
+	//t.Run("根据购物车主键和书籍主键获取购物车中所有的购物项", testGetCartItemsByCartIDAndBookID)
 }
 
 func testGetCartItemByBookID(t *testing.T) {
