@@ -71,3 +71,31 @@ func GetOrderInfo(w http.ResponseWriter, r *http.Request) {
 	t := template.Must(template.ParseFiles("views/pages/order/order_info.html"))
 	t.Execute(w, orderItems)
 }
+
+// GetMyOrders 获取我的订单
+func GetMyOrders(w http.ResponseWriter, r *http.Request) {
+	flag, session := dao.IsLogin(r)
+	if flag {
+		orders, _ := dao.GetMyOrder(session.UserID)
+		session.Orders = orders
+		t := template.Must(template.ParseFiles("views/pages/order/order.html"))
+		t.Execute(w, session)
+	} else {
+		t := template.Must(template.ParseFiles("views/pages/user/login.html"))
+		t.Execute(w, "")
+	}
+}
+
+// SendOrder 发货
+func SendOrder(w http.ResponseWriter, r *http.Request) {
+	orderId := r.FormValue("orderId")
+	dao.UpdateOrderState(orderId, 1)
+	GetOrders(w, r)
+}
+
+// TakeOrder 收货
+func TakeOrder(w http.ResponseWriter, r *http.Request) {
+	orderId := r.FormValue("orderId")
+	dao.UpdateOrderState(orderId, 2)
+	GetMyOrders(w, r)
+}
