@@ -3,6 +3,7 @@ package controller
 import (
 	"bookstore/dao"
 	"bookstore/model"
+	"encoding/json"
 	"github.com/google/uuid"
 	"html/template"
 	"net/http"
@@ -150,9 +151,24 @@ func UpdateCartItem(w http.ResponseWriter, r *http.Request) {
 					dao.UpdateBookCount(v)
 				}
 			}
-			dao.UpdateCart(cart)
+			cart, _ = dao.GetCartByUserID(session.UserID)
+			totalCount := cart.GetTotalCount()
+			totalAmount := cart.GetTotalAmount()
+			var amount float64
+			for _, v := range cart.CartItems {
+				if v.CartItemID == iCartItemID {
+					amount = v.Amount
+					break
+				}
+			}
+
+			strTotalCount := strconv.FormatInt(totalCount, 10)
+			strTotalAmount := strconv.FormatFloat(totalAmount, 'f', 2, 64)
+			strAmount := strconv.FormatFloat(amount, 'f', 2, 64)
+			data := map[string]string{"totalCount": strTotalCount, "totalAmount": strTotalAmount, "amount": strAmount}
+			jsonData, _ := json.Marshal(data)
+			w.Write(jsonData)
 		}
-		GetCartInfo(w, r)
 	} else {
 		t := template.Must(template.ParseFiles("views/pages/user/login.html"))
 		t.Execute(w, "")
