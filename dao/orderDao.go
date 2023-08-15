@@ -24,13 +24,6 @@ func GetOrders() ([]*model.Order, error) {
 	for rows.Next() {
 		order := &model.Order{}
 		rows.Scan(&order.OrderID, &order.CreateTime, &order.TotalCount, &order.TotalAmount, &order.State, &order.UserID)
-		if order.State == 0 {
-			order.NoSend = true
-		} else if order.State == 1 {
-			order.SendComplate = true
-		} else {
-			order.Complate = true
-		}
 		orders = append(orders, order)
 	}
 	return orders, nil
@@ -46,13 +39,6 @@ func GetMyOrder(userID int) ([]*model.Order, error) {
 	for rows.Next() {
 		order := &model.Order{}
 		rows.Scan(&order.OrderID, &order.CreateTime, &order.TotalCount, &order.TotalAmount, &order.State, &order.UserID)
-		if order.State == 0 {
-			order.NoSend = true
-		} else if order.State == 1 {
-			order.SendComplate = true
-		} else {
-			order.Complate = true
-		}
 		orders = append(orders, order)
 	}
 	return orders, nil
